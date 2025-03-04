@@ -14,9 +14,11 @@ class FutbolistaController extends Controller
      */
     public function index()
     {
-        // Obtener todos los futbolistas
-        $futbolistas = Futbolista::all();
-        return response()->json($futbolistas);
+        // Obtener los futbolistas del usuario autenticado
+        $futbolistas = Futbolista::where('id_usuario', Auth::id())->get();
+
+        // Retornar vista con los futbolistas
+        return view('futbolistas.index', compact('futbolistas'));
     }
 
     /**
@@ -113,9 +115,14 @@ class FutbolistaController extends Controller
      */
     public function destroy(Futbolista $futbolista)
     {
+        // Verificar que el futbolista pertenece al usuario autenticado
+        if ($futbolista->id_usuario !== Auth::id()) {
+            return redirect()->route('futbolistas.index')->with('error', 'No tienes permiso para eliminar este futbolista.');
+        }
+
         // Eliminar el futbolista
         $futbolista->delete();
 
-        return response()->json(['message' => 'Futbolista eliminado exitosamente']);
+        return redirect()->route('futbolistas.index')->with('success', 'Futbolista eliminado exitosamente');
     }
 }

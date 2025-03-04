@@ -23,7 +23,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::resource('futbolistas', FutbolistaController::class)->middleware(['auth', 'verified']);
+Route::middleware(['auth'])->group(function () {
+    Route::resource('futbolistas', FutbolistaController::class);
+});
+
 
 
 require __DIR__ . '/auth.php';

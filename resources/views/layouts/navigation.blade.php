@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('futbolistas.create')" :active="request()->routeIs('futbolistas.create')" class="text-white transition duration-300 hover:text-gray-300">
                         {{ __('Insertar Futbolista') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('futbolistas.index')" :active="request()->routeIs('futbolistas.index')" class="text-white transition duration-300 hover:text-gray-300">
+                        {{ __('Mis Futbolistas') }}
+                    </x-nav-link>
 
                 </div>
             </div>
