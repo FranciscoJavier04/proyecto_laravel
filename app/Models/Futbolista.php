@@ -11,4 +11,6 @@ class Futbolista extends Model
     /** @use HasFactory<\Database\Factories\FutbolistaFactory> */
     use HasFactory;
     use SoftDeletes;
+
+    protected $guarded = [];
 }

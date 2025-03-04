@@ -25,4 +25,5 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('futbolistas', FutbolistaController::class)->middleware(['auth', 'verified']);
 
+
 require __DIR__ . '/auth.php';
