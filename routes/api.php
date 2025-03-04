@@ -8,4 +8,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::apiResource('futbolista', APIFutbolistaController::class);
+Route::apiResource('futbolistas',APIFutbolistaController::class);
