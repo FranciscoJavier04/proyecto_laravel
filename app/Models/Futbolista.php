@@ -12,5 +12,18 @@ class Futbolista extends Model
     use HasFactory;
     use SoftDeletes;
 
+    // Definir los campos que se pueden asignar masivamente
     protected $guarded = [];
+
+    // Relación con la tabla 'users'
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'id_usuario');
+    }
+
+    // Puedes agregar otras relaciones si las necesitas, por ejemplo, con 'posiciones_asignadas'
+    public function posicionesAsignadas()
+    {
+        return $this->hasMany(PosicionesAsignada::class, 'futbolista_id');
+    }
 }

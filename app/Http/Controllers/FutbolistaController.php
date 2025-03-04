@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Futbolista;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FutbolistaController extends Controller
 {
@@ -31,27 +33,33 @@ class FutbolistaController extends Controller
      */
     public function store(Request $request)
     {
-        // Validar los datos del futbolista
-        $validated = $request->validate([
+        $request->validate([
             'nombre' => 'required|string|max:100',
             'fecha_nac' => 'required|date',
             'edad' => 'required|integer',
             'nacionalidad' => 'required|string|max:100',
-            'imagen' => 'required|string|max:255',
-            'id_usuario' => 'required|exists:users,id',
+            'imagen' => 'required|image|max:255',
         ]);
 
-        // Crear el futbolista
-        $futbolista = Futbolista::create([
-            'nombre' => $validated['nombre'],
-            'fecha_nac' => $validated['fecha_nac'],
-            'edad' => $validated['edad'],
-            'nacionalidad' => $validated['nacionalidad'],
-            'imagen' => $validated['imagen'],
-            'id_usuario' => $validated['id_usuario'],
-        ]);
+        try {
+            $futbolista = new Futbolista();
+            $futbolista->nombre = $request->nombre;
+            $futbolista->fecha_nac = $request->fecha_nac;
+            $futbolista->edad = $request->edad;
+            $futbolista->nacionalidad = $request->nacionalidad;
+            $futbolista->id_usuario = Auth::id();
 
-        return response()->json($futbolista, 201);
+            $nombreImagen = time() . "-" . $request->file('imagen')->getClientOriginalName();
+            $futbolista->imagen = $nombreImagen;
+
+            $futbolista->save();
+
+            $request->file('imagen')->storeAs('img_futbolistas', $nombreImagen);
+
+            return response()->json(['msg' => 'Futbolista añadido correctamente', 'futbolista' => $futbolista], 201);
+        } catch (QueryException $e) {
+            return response()->json(['msg' => 'Error al añadir futbolista. Inténtalo más tarde'], 500);
+        }
     }
 
     /**
