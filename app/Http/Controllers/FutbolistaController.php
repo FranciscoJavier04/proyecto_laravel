@@ -33,6 +33,7 @@ class FutbolistaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
         $request->validate([
@@ -58,11 +59,13 @@ class FutbolistaController extends Controller
 
             $request->file('imagen')->storeAs('img_futbolistas', $nombreImagen);
 
-            return response()->json(['msg' => 'Futbolista añadido correctamente', 'futbolista' => $futbolista], 201);
+            // Redirigir a la ruta futbolistas.index después de añadir el futbolista
+            return redirect()->route('futbolistas.index')->with('success', 'Futbolista añadido correctamente');
         } catch (QueryException $e) {
             return response()->json(['msg' => 'Error al añadir futbolista. Inténtalo más tarde'], 500);
         }
     }
+
 
     /**
      * Display the specified resource.
