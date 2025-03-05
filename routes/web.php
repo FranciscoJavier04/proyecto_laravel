@@ -12,7 +12,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::get('/hola', function () {
     return 'hola';
@@ -24,10 +24,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('futbolistas', FutbolistaController::class);
 });
-Route::middleware(['auth', admin::class])->group(function () {
+Route::middleware(['auth', admin::class, 'verified'])->group(function () {
     Route::resource('user', UserController::class);
 });
 
@@ -37,7 +37,7 @@ Route::get('/futbolistasTotal', function () {
     return view('futbolistas.futbolistas');
 })->name('futbolistasTotal');
 
-Route::delete('/futbolistas/{id}', [FutbolistaController::class, 'destroy'])->name('futbolistas.destroy');
+
 
 
 

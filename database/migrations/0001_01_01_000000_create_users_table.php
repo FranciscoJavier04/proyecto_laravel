@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('sexo', ['Masculino', 'Femenino'])->nullable();
             $table->string('pais', 100)->nullable();
             $table->boolean('admin')->default(0);
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
             $table->rememberToken();
             $table->softDeletes();
