@@ -21,6 +21,10 @@
                     <x-nav-link :href="route('futbolistas.index')" :active="request()->routeIs('futbolistas.index')" class="text-white transition duration-300 hover:text-gray-300">
                         {{ __('Mis Futbolistas') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('futbolistasTotal')" :active="request()->routeIs('futbolistasTotal')" class="text-white transition duration-300 hover:text-gray-300">
+                        {{ __('Todos los Futbolistas') }}
+                    </x-nav-link>
+
 
                 </div>
             </div>

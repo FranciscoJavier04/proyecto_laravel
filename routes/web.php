@@ -29,4 +29,10 @@ Route::middleware(['auth'])->group(function () {
 
 
 
+Route::get('/futbolistasTotal', function () {
+    return view('futbolistas.futbolistas');
+})->name('futbolistasTotal');
+
+
+
 require __DIR__ . '/auth.php';

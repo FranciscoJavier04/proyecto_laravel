@@ -22,6 +22,7 @@ class FutbolistaController extends Controller
         return view('futbolistas.index', compact('futbolistas'));
     }
 
+
     /**
      * Show the form for creating a new resource.
      */
