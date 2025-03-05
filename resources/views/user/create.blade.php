@@ -50,6 +50,15 @@
                 <input type="password" class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" id="password_confirmation" name="password_confirmation" required>
             </div>
 
+            <!-- Campo para seleccionar si el usuario será admin -->
+            <div class="mb-4">
+                <label for="admin" class="block text-lg font-medium text-gray-700">¿Es Administrador?</label>
+                <select name="admin" id="admin" class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+                    <option value="0" {{ old('admin') == '0' ? 'selected' : '' }}>No</option>
+                    <option value="1" {{ old('admin') == '1' ? 'selected' : '' }}>Sí</option>
+                </select>
+            </div>
+
             <button type="submit" class="w-full py-3 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 Crear Usuario
             </button>

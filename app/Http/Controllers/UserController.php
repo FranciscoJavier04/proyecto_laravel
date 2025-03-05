@@ -34,7 +34,8 @@ class UserController extends Controller
             'sexo' => 'nullable|in:Masculino,Femenino',
             'pais' => 'nullable|string|max:100',
             'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed', // Confirmación de la contraseña
+            'password' => 'required|string|min:8|confirmed',
+            'admin' => 'required|in:0,1', // Validación para que solo sea 0 o 1
         ]);
 
         // Crear el nuevo usuario
@@ -45,10 +46,12 @@ class UserController extends Controller
         $user->pais = $request->input('pais');
         $user->email = $request->input('email');
         $user->password = Hash::make($request->input('password')); // Encriptamos la contraseña
+        $user->admin = $request->input('admin'); // Asignamos el valor de admin
         $user->save(); // Guardamos el usuario
 
         return redirect()->route('user.index')->with('success', 'Usuario creado correctamente.');
     }
+
 
     // Método para mostrar el formulario de edición de perfil
     public function edit(User $user)
@@ -69,7 +72,8 @@ class UserController extends Controller
                 'apellidos' => 'nullable|string|max:100',
                 'sexo' => 'nullable|in:Masculino,Femenino',
                 'pais' => 'nullable|string|max:100',
-                'password' => 'nullable|string|min:8|confirmed', // Si la contraseña no está vacía
+                'password' => 'nullable|string|min:8|confirmed',
+                'admin' => 'required|in:0,1', // Validación para que solo sea 0 o 1
             ]);
 
             // Actualizar los datos del usuario
@@ -78,6 +82,7 @@ class UserController extends Controller
             $user->sexo = $request->input('sexo');
             $user->pais = $request->input('pais');
             $user->email = $request->input('email');
+            $user->admin = $request->input('admin'); // Actualizamos el campo admin
 
             // Si el campo de contraseña no está vacío, la actualizamos
             if ($request->filled('password')) {
@@ -92,6 +97,7 @@ class UserController extends Controller
             return redirect()->route('user.index')->with('error', 'Error al actualizar el perfil: ' . $e->getMessage());
         }
     }
+
 
     // Método para eliminar un usuario
     public function destroy($id)

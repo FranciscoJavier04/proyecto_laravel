@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="container px-4 py-8 mx-auto">
-        <h1 class="mb-6 text-3xl font-semibold text-center">Editar Perfil</h1>
+        <h1 class="mb-6 text-3xl font-semibold text-center text-blue-500">Editar Perfil</h1>
 
         @if(session('success'))
             <div class="p-4 mb-6 text-white bg-green-500 rounded-lg shadow-lg">
@@ -19,7 +19,7 @@
 
             <div class="mb-6">
                 <label for="apellidos" class="block text-sm font-medium text-gray-700">Apellidos</label>
-                <input type="text" class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500" id="apellidos" name="apellidos" value="{{ old('apellidos', $user->apellidos) }}">
+                <input type="text" class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500" id="apellidos" name="apellidos" value="{{ old('apellidos', $user->apellidos) }}"/>
             </div>
 
             <div class="mb-6">
@@ -33,7 +33,7 @@
 
             <div class="mb-6">
                 <label for="pais" class="block text-sm font-medium text-gray-700">País</label>
-                <input type="text" class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500" id="pais" name="pais" value="{{ old('pais', $user->pais) }}">
+                <input type="text" class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500" id="pais" name="pais" value="{{ old('pais', $user->pais) }}"/>
             </div>
 
             <div class="mb-6">
@@ -49,6 +49,15 @@
             <div class="mb-6">
                 <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirmar Contraseña</label>
                 <input type="password" class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500" id="password_confirmation" name="password_confirmation" placeholder="Deja en blanco si no quieres cambiarla">
+            </div>
+
+            <!-- Campo para seleccionar si el usuario será admin -->
+            <div class="mb-6">
+                <label for="admin" class="block text-sm font-medium text-gray-700">¿Es Administrador?</label>
+                <select name="admin" id="admin" class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+                    <option value="0" {{ old('admin', $user->admin) == '0' ? 'selected' : '' }}>No</option>
+                    <option value="1" {{ old('admin', $user->admin) == '1' ? 'selected' : '' }}>Sí</option>
+                </select>
             </div>
 
             <button type="submit" class="w-full py-3 font-semibold text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
