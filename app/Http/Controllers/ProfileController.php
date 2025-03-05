@@ -1,4 +1,4 @@
-<?php
+<?php // App/Http/Controllers/ProfileController.php
 
 namespace App\Http\Controllers;
 
@@ -26,13 +26,13 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        // Eliminar la lógica relacionada con la verificación de correo electrónico
+        // Ya no actualizamos ni verificamos la columna `email_verified_at`
 
-        $request->user()->save();
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -47,9 +47,7 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-
         Auth::logout();
-
         $user->delete();
 
         $request->session()->invalidate();
