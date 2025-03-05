@@ -15,10 +15,11 @@
                     Disfruta de la mejor experiencia futbolística con nosotros.
                 </p>
                 <div class="flex justify-center mt-6">
-                    <a href="#" class="px-6 py-3 text-lg font-semibold text-white transition duration-300 bg-blue-600 rounded-lg shadow-md hover:bg-blue-700">
+                    <a href="{{ route('futbolistasTotal') }}" class="px-6 py-3 text-lg font-semibold text-white transition duration-300 bg-blue-600 rounded-lg shadow-md hover:bg-blue-700">
                         Explorar
                     </a>
                 </div>
+
             </div>
         </div>
     </div>

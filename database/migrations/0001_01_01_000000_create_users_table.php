@@ -20,11 +20,6 @@ return new class extends Migration
             $table->enum('sexo', ['Masculino', 'Femenino'])->nullable();
             $table->string('pais', 100)->nullable();
             $table->boolean('admin')->default(0);
-            $table->string('nombreEquipo', 100)->nullable();
-            $table->string('paisEquipo', 100)->nullable();
-            $table->integer('fundacionEquipo')->nullable();
-            $table->string('estadioEquipo', 100)->nullable();
-            $table->string('imagenEquipo')->nullable();
             $table->timestamps();
             $table->rememberToken();
             $table->softDeletes();
