@@ -72,6 +72,20 @@
                             @enderror
                         </div>
 
+                        <!-- Posiciones -->
+                        <div class="relative z-0 w-full mb-5 group">
+                            <label for="posiciones" class="block text-sm text-gray-900 dark:text-white">Posiciones</label>
+                            <select name="posiciones[]" id="posiciones" multiple
+                                class="block py-2.5 px-0 w-full text-sm text-gray-900 dark:text-white bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                @foreach($posiciones as $posicion)
+                                    <option value="{{ $posicion->id }}">{{ $posicion->nombre }}</option>
+                                @endforeach
+                            </select>
+                            @error('posiciones')
+                                <span class="text-xs text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         <!-- Usuario (usamos el usuario autenticado) -->
                         <input type="hidden" name="id_usuario" value="{{ auth()->id() }}">
 

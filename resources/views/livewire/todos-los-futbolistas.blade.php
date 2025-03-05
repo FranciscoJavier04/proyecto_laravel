@@ -12,6 +12,14 @@
                     <p class="text-sm text-gray-600">Nacionalidad: {{ $futbolista->nacionalidad }}</p>
                     <p class="text-sm text-gray-600">Propietario: {{ $futbolista->usuario->name ?? 'Sin propietario' }}</p>
 
+                    <!-- Mostrar la(s) posición(es) del futbolista -->
+                    <p class="text-sm text-gray-600">
+                        Posición(es):
+                        @foreach($futbolista->posiciones as $posicion)
+                            {{ $posicion->nombre }} @if(!$loop->last), @endif
+                        @endforeach
+                    </p>
+
                     @if(Auth::check() && Auth::id() === $futbolista->id_usuario)
                         <div class="flex mt-4 space-x-4">
                             <a href="{{ route('futbolistas.edit', $futbolista->id) }}" class="px-4 py-2 text-white bg-yellow-500 rounded-lg hover:bg-yellow-600">Editar</a>

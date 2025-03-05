@@ -11,4 +11,11 @@ class Posicione extends Model
     /** @use HasFactory<\Database\Factories\PosicioneFactory> */
     use HasFactory;
     use SoftDeletes;
+
+    // Posicion.php
+
+    public function futbolistas()
+    {
+        return $this->belongsToMany(Futbolista::class, 'posiciones_asignadas', 'posicion_id', 'futbolista_id');
+    }
 }

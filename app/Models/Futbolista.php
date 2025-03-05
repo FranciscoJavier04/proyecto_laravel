@@ -26,4 +26,11 @@ class Futbolista extends Model
     {
         return $this->hasMany(PosicionesAsignada::class, 'futbolista_id');
     }
+
+    // Futbolista.php
+
+    public function posiciones()
+    {
+        return $this->belongsToMany(Posicione::class, 'posiciones_asignadas', 'futbolista_id', 'posicion_id');
+    }
 }

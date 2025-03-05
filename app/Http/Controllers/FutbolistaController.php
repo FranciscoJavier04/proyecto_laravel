@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateFutbolistaRequest;
 use App\Models\Futbolista;
+use App\Models\Posicione;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,10 +27,15 @@ class FutbolistaController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+
+
     public function create()
     {
-        // Devolver vista para crear un futbolista (si es necesario una vista en lugar de API)
-        return view('futbolistas.create');
+        // Obtener todas las posiciones disponibles
+        $posiciones = Posicione::all();
+
+        // Retornar la vista de crear futbolista con las posiciones
+        return view('futbolistas.create', compact('posiciones'));
     }
 
     /**
@@ -38,35 +44,36 @@ class FutbolistaController extends Controller
 
     public function store(Request $request)
     {
+        // Validar los datos del formulario
         $request->validate([
-            'nombre' => 'required|string|max:100',
+            'nombre' => 'required|string|max:255',
             'fecha_nac' => 'required|date',
-            'edad' => 'required|integer',
-            'nacionalidad' => 'required|string|max:100',
-            'imagen' => 'required|image|max:255',
+            'edad' => 'required|integer|min:0',
+            'nacionalidad' => 'required|string|max:255',
+            'imagen' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'posiciones' => 'required|array|min:1', // Validar que se seleccionen posiciones
+            'posiciones.*' => 'exists:posiciones,id', // Validar que las posiciones seleccionadas existan en la base de datos
         ]);
 
-        try {
-            $futbolista = new Futbolista();
-            $futbolista->nombre = $request->nombre;
-            $futbolista->fecha_nac = $request->fecha_nac;
-            $futbolista->edad = $request->edad;
-            $futbolista->nacionalidad = $request->nacionalidad;
-            $futbolista->id_usuario = Auth::id();
+        // Subir la imagen y obtener la ruta
+        $imagenPath = $request->file('imagen')->store('img_futbolistas', 'public');
 
-            $nombreImagen = time() . "-" . $request->file('imagen')->getClientOriginalName();
-            $futbolista->imagen = $nombreImagen;
+        // Crear el futbolista
+        $futbolista = Futbolista::create([
+            'nombre' => $request->nombre,
+            'fecha_nac' => $request->fecha_nac,
+            'edad' => $request->edad,
+            'nacionalidad' => $request->nacionalidad,
+            'id_usuario' => $request->id_usuario,
+            'imagen' => basename($imagenPath) // Guardamos solo el nombre de la imagen
+        ]);
 
-            $futbolista->save();
+        // Asignar las posiciones seleccionadas al futbolista
+        $futbolista->posiciones()->attach($request->posiciones);
 
-            $request->file('imagen')->storeAs('img_futbolistas', $nombreImagen);
-
-            // Redirigir a la ruta futbolistas.index después de añadir el futbolista
-            return redirect()->route('futbolistas.index')->with('success', 'Futbolista añadido correctamente');
-        } catch (QueryException $e) {
-            return response()->json(['msg' => 'Error al añadir futbolista. Inténtalo más tarde'], 500);
-        }
+        return redirect()->route('futbolistas.index')->with('success', 'Futbolista creado correctamente');
     }
+
 
 
     /**
@@ -81,43 +88,54 @@ class FutbolistaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Futbolista $futbolista)
+
+
+    public function edit($id)
     {
-        // Devolver vista para editar un futbolista (si es necesario una vista en lugar de API)
-        return view('futbolistas.edit', compact('futbolista'));
+        // Obtener el futbolista con sus posiciones actuales
+        $futbolista = Futbolista::with('posiciones')->findOrFail($id);
+
+        // Obtener todas las posiciones disponibles
+        $posiciones = Posicione::all();
+
+        return view('futbolistas.edit', compact('futbolista', 'posiciones'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFutbolistaRequest $request, Futbolista $futbolista)
+
+    public function update(Request $request, $id)
     {
-        // Verificar que el usuario autenticado es dueño del futbolista
-        if ($futbolista->id_usuario !== Auth::id()) {
-            return redirect()->route('futbolistas.index')->with('error', 'No tienes permiso para editar este futbolista.');
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'fecha_nac' => 'required|date',
+            'edad' => 'required|integer|min:0',
+            'nacionalidad' => 'required|string|max:255',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'posiciones' => 'required|array|min:1', // Validar que se seleccionen posiciones
+            'posiciones.*' => 'exists:posiciones,id', // Validar que las posiciones seleccionadas existan en la base de datos
+        ]);
+
+        // Obtener el futbolista
+        $futbolista = Futbolista::findOrFail($id);
+
+        // Actualizar el futbolista
+        $futbolista->update($request->except('posiciones'));
+
+        // Actualizar las posiciones (relación many-to-many)
+        $futbolista->posiciones()->sync($request->posiciones);
+
+        // Si se sube una nueva imagen, manejarla
+        if ($request->hasFile('imagen')) {
+            $imagenPath = $request->file('imagen')->store('img_futbolistas', 'public');
+            $futbolista->update(['imagen' => basename($imagenPath)]);
         }
 
-        try {
-            // Actualizar datos del futbolista
-            $futbolista->nombre = $request->nombre;
-            $futbolista->fecha_nac = $request->fecha_nac;
-            $futbolista->edad = $request->edad;
-            $futbolista->nacionalidad = $request->nacionalidad;
-
-            // Si el usuario sube una nueva imagen, actualizarla
-            if ($request->hasFile('imagen')) {
-                $nombreImagen = time() . "-" . $request->file('imagen')->getClientOriginalName();
-                $request->file('imagen')->storeAs('img_futbolistas', $nombreImagen);
-                $futbolista->imagen = $nombreImagen;
-            }
-
-            $futbolista->save();
-
-            return redirect()->route('futbolistas.index')->with('success', 'Futbolista actualizado correctamente.');
-        } catch (QueryException $e) {
-            return back()->with('error', 'Error al actualizar el futbolista. Inténtalo más tarde.');
-        }
+        return redirect()->route('futbolistas.index')->with('success', 'Futbolista actualizado correctamente.');
     }
+
 
     /**
      * Remove the specified resource from storage.

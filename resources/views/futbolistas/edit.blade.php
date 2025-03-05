@@ -71,6 +71,24 @@
                 </div>
             @endif
 
+            <!-- Selección de posiciones -->
+            <div>
+                <label for="posiciones" class="block font-medium text-gray-700">Posiciones</label>
+                <select name="posiciones[]" id="posiciones" multiple class="w-full p-2 mt-1 border rounded-lg focus:ring focus:ring-blue-300">
+                    @foreach($posiciones as $posicion)
+                        <option value="{{ $posicion->id }}"
+                            @if(in_array($posicion->id, old('posiciones', $futbolista->posiciones->pluck('id')->toArray())))
+                                selected
+                            @endif>
+                            {{ $posicion->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('posiciones')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+
             <!-- Botón de enviar -->
             <div class="flex justify-between">
                 <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">Actualizar</button>
