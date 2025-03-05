@@ -18,6 +18,12 @@
                     <x-nav-link :href="route('futbolistasTotal')" :active="request()->routeIs('futbolistasTotal')" class="text-white transition duration-300 hover:text-gray-300">
                         {{ __('Todos los Futbolistas') }}
                     </x-nav-link>
+                    @if(Auth::check() && Auth::user()->admin == 1)
+                    <x-nav-link :href="route('user.index')" :active="request()->routeIs('user.index')" class="text-white transition duration-300 hover:text-gray-300">
+                    {{ __('Backend') }}
+                    </x-nav-link>
+                    @endif
+
 
 
                 </div>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FutbolistaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\admin;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,9 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('futbolistas', FutbolistaController::class);
+});
+Route::middleware(['auth', admin::class])->group(function () {
+    Route::resource('user', UserController::class);
 });
 
 
