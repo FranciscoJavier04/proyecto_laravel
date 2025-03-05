@@ -23,12 +23,17 @@
                     @if(Auth::check() && Auth::id() === $futbolista->id_usuario)
                         <div class="flex mt-4 space-x-4">
                             <a href="{{ route('futbolistas.edit', $futbolista->id) }}" class="px-4 py-2 text-white bg-yellow-500 rounded-lg hover:bg-yellow-600">Editar</a>
-                            <form action="{{ route('futbolistas.destroy', $futbolista->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600" onclick="return confirm('¿Estás seguro?')">Borrar</button>
-                            </form>
+
+                            <!-- Botón para abrir el modal de confirmación -->
+                            <button onclick="openModal('futbolista-{{ $futbolista->id }}')" class="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600">Borrar</button>
                         </div>
+
+                        <!-- Componente de modal de confirmación -->
+                        <x-confirm-delete-modal
+                            id="futbolista-{{ $futbolista->id }}"
+                            route="{{ route('futbolistas.destroy', $futbolista->id) }}"
+                            message="¿Seguro que deseas eliminar a {{ $futbolista->nombre }}?"
+                        />
                     @endif
                 </div>
             </div>

@@ -22,4 +22,9 @@ class SearchFutbolistas extends Component
             'futbolistas' => $futbolistas,
         ]);
     }
+    public function deleteFutbolista($id)
+    {
+        Futbolista::findOrFail($id)->delete();
+        $this->emit('futbolistaEliminado'); // Para actualizar la lista en vivo
+    }
 }

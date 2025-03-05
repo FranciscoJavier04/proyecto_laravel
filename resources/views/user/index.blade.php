@@ -2,7 +2,6 @@
     <div class="container p-6 mx-auto">
         <h1 class="mb-6 text-3xl font-semibold text-blue-500">Listado de Usuarios</h1>
 
-
         <!-- Mensaje de éxito o error -->
         @if(session('success'))
             <div class="p-4 mb-4 text-white bg-green-500 rounded alert alert-success">
@@ -43,13 +42,15 @@
                                 <!-- Botón para editar -->
                                 <a href="{{ route('user.edit', $user->id) }}" class="inline-block px-3 py-1 text-white transition duration-200 bg-yellow-500 rounded-lg hover:bg-yellow-600">Editar</a>
 
+                                <!-- Botón para eliminar con modal -->
+                                <button onclick="openModal('usuario-{{ $user->id }}')" class="inline-block px-3 py-1 text-white transition duration-200 bg-red-600 rounded-lg hover:bg-red-700">Eliminar</button>
 
-                                <!-- Botón para eliminar -->
-                                <form action="{{ route('user.destroy', $user->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="inline-block px-3 py-1 text-white transition duration-200 bg-red-600 rounded-lg hover:bg-red-700" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')">Eliminar</button>
-                                </form>
+                                <!-- Componente de modal de confirmación -->
+                                <x-confirm-delete-modal
+                                    id="usuario-{{ $user->id }}"
+                                    route="{{ route('user.destroy', $user->id) }}"
+                                    message="¿Seguro que deseas eliminar a {{ $user->name }}?"
+                                />
                             </td>
                         </tr>
                     @endforeach

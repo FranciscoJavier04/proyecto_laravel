@@ -37,6 +37,8 @@ Route::get('/futbolistasTotal', function () {
     return view('futbolistas.futbolistas');
 })->name('futbolistasTotal');
 
+Route::delete('/futbolistas/{id}', [FutbolistaController::class, 'destroy'])->name('futbolistas.destroy');
+
 
 
 require __DIR__ . '/auth.php';
